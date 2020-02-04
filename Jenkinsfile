@@ -2,6 +2,7 @@ pipeline {
 
   environment {
     registry = "172.17.0.11:5000/myweb"
+    dockerImage = ""
   }
 
   agent any
@@ -17,7 +18,8 @@ pipeline {
     stage('Build image') {
       steps {
         script {
-          "docker build . -t test"
+          sh "docker build -t test:${BUILD_NUMBER} ."
+          dockerImage = "test:${BUILD_NUMBER}"
         }
       }
     }
