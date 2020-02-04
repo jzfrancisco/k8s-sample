@@ -4,9 +4,7 @@ pipeline {
     registry = "localhost:5000/myweb"
   }
 
-  agent {
-    label 'docker'
-  }
+  agent any
 
   stages {
 
@@ -17,39 +15,27 @@ pipeline {
     }
 
     stage('Build image') {
-      agent {
-        docker {
-          steps {
-            script {
-              dockerImage = docker.build registry + ":$BUILD_NUMBER"
-            }
-          }
+      steps {
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
       }
     }
 
     stage('Push Image') {
-      agent {
-        docker {
-          steps {
-            script {
-              docker.withRegistry( "" ) {
-                dockerImage.push()
-              }
-            }
+      steps {
+        script {
+          docker.withRegistry( "" ) {
+            dockerImage.push()
           }
         }
       }
     }
 
     stage('Deploy App') {
-      agent {
-        docker {
-          steps {
-            script {
-              kubernetesDeploy(configs: "myweb.yaml")
-            }
-          }
+      steps {
+        script {
+          kubernetesDeploy(configs: "myweb.yaml")
         }
       }
     }
