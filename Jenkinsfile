@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    registry = "10.107.104.235:5000/myweb"
+    registry = "172.17.0.11:5000/myweb"
   }
 
   agent any
